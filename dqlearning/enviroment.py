@@ -9,8 +9,8 @@ class Enviroment(object):
     def __init__(self, tipo_1 = 208, tipo_2 = 52):
         self.tipo_1 = tipo_1
         self.tipo_2 = tipo_2
-        self.ferrovia = {'media_horas':1,'std_horas': 4, 'tipo': self.tipo_1, 'autorizado': 0, 'finalizado':0}
-        self.hidro_alt = {'media_horas':28,'std_horas': 7, 'tipo': self.tipo_1, 'autorizado': 0, 'finalizado':0}
+        self.ferrovia = {'media_horas':1,'std_horas': 4, 'tipo': self.tipo_1, 'autorizado': 1, 'finalizado':0}
+        self.hidro_alt = {'media_horas':28,'std_horas': 7, 'tipo': self.tipo_1, 'autorizado': 1, 'finalizado':0}
         self.via_deslocamento = {'media_horas':18,'std_horas': 4, 'tipo': self.tipo_1, 'autorizado': 0, 'finalizado':0}
         self.elementos_varios = {'media_horas':3,'std_horas': 1, 'tipo': self.tipo_1, 'autorizado': 0, 'finalizado':0}
         self.limites_especiais = {'media_horas':1,'std_horas': 3, 'tipo': self.tipo_2, 'autorizado': 0, 'finalizado':0}
@@ -39,20 +39,19 @@ class Enviroment(object):
                          'validacao':10,
                          'edicao':11}
 
-        self.funcionarios = {'Danilo': [1,3,4,5,6,7,9],
-                             'Paulo': [1,3,4,5,6,7,9],
-                             'Andre': [2,8,9],
-                             'Castro': [0,3,4,5,6,7,9,10],
-                             'Gustavo Ramos': [1,2,8,9,10],
-                             'Henrique Pires': [2,8],
-                             'Viana':[1,2,8],
-                             'Mendonca': [2,8],
-                             'Rute Daniela': [1,2,8],
-                             'Cialla': [1,2,8],
-                             'Colleto': [1,2],
-                             'Fachi': [10,11],
-                             'Ana Luiza': [10,11]}
-
+        self.funcionarios = [{'nome': 'Danilo','numero': 0, 'habilidades': [1,3,4,5,6,7,9]},
+                        {'nome': 'Paulo', 'numero': 1, 'habilidades': [1,3,4,5,6,7,9]},
+                        {'nome': 'Andre', 'numero': 2, 'habilidades': [2,8,9]},
+                        {'nome': 'Castro', 'numero': 3, 'habilidades': [0,3,4,5,6,7,9,10]},
+                        {'nome': 'Gustavo Ramos', 'numero':4, 'habilidades': [1,2,8,9,10]},
+                        {'nome': 'Henrique Pires', 'numero':5, 'habilidades': [2,8]},
+                        {'nome': 'Viana', 'numero': 6,'habilidades': [1,2,8]},
+                        {'nome': 'Mendonca', 'numero': 7, 'habilidades': [2,8]},
+                        {'nome': 'Rute Daniela', 'numero': 8, 'habilidades': [1,2,8]},
+                        {'nome': 'Cialla', 'numero': 9, 'habilidades': [1,2,8]},
+                        {'nome': 'Colleto', 'numero': 10, 'habilidades': [1,2]},
+                        {'nome': 'Fachi', 'numero': 11, 'habilidades': [10,11]},
+                        {'nome': 'Ana Luiza', 'numero': 12, 'habilidades': [10,11]}]
     
     def update_enviroment(self, tempo_ai):
 
@@ -61,6 +60,19 @@ class Enviroment(object):
 
         #Escalonamento de recompensa
         self.reward = 1e-3*self.reward
+
+        #Iniciando o processo
+        if self.ferrovia['autorizado'] == 1:
+            escalados_ferrovia = []
+            for i in range(len(self.funcionarios)):
+                if self.subfases['ferrovia'] in self.funcionarios[i]['habilidades']:
+                    escalados_ferrovia.append(self.funcionarios[i]['numero'])
+
+        if self.hidro_alt['autorizado'] == 1:
+            escalados_hidrovia = []
+            for i in range(len(self.funcionarios)):
+                if self.subfases['hidrografia'] in self.funcionarios[i]['habilidades']:
+                    escalados_hidrovia.append(self.funcionarios[i]['numero'])
 
         #Obtenção do próximo estado
         if self.ferrovia['finalizado'] == 1:
