@@ -81,16 +81,16 @@ class Enviroment(object):
             for i in range(len(self.funcionarios)):
                 if self.subfases['ferrovia'] in self.funcionarios[i]['habilidades']:
                     escalados_ferrovia.append(self.funcionarios[i]['numero'])
-            qtd_escalados = np.random.choice(escalados_ferrovia, size=np.random.randint(1, len(escalados_ferrovia)), replace=False)
+            qtd_escalados = 1
+            # qtd_escalados = np.random.choice(escalados_ferrovia, size=np.random.randint(len(escalados_ferrovia)), replace=False)
             mu, sigma = self.ferrovia['media_horas'], self.ferrovia['std_horas']
-            tempo_ferrovia = abs(np.random.normal(mu, sigma, qtd_escalados))*self.ferrovia['tipo']
+            tempo_ferrovia = self.ferrovia['tipo']*abs(np.random.normal(mu, sigma, 1))/len(qtd_escalados)
 
             #Atualizando tempos
             self.tempo_total['ferrovia'] = tempo_ferrovia
 
             #Atualizando estados
             self.ferrovia['finalizado'] = 1
-            self.via_deslocamento['autorizado'] = 1
 
         #___________________________________HIDROGRAFIA________________________________________
         if self.hidro_alt['autorizado'] == 1:
@@ -98,11 +98,56 @@ class Enviroment(object):
             for i in range(len(self.funcionarios)):
                 if self.subfases['hidrografia'] in self.funcionarios[i]['habilidades']:
                     escalados_hidrovia.append(self.funcionarios[i]['numero'])
+            qtd_escalados = np.random.choice(escalados_hidrovia, size=np.random.randint(0, len(escalados_hidrovia)), replace=False)
+            mu, sigma = self.hidro_alt['media_horas'], self.hidro_alt['std_horas']
+            tempo_hidrovia = self.hidro_alt['tipo']*abs(np.random.normal(mu, sigma, 1))/len(qtd_escalados)        
+           
+           #Atualizando tempos
+            self.tempo_total['hidrovia'] = tempo_hidrovia
 
-        #Obtenção do próximo estado
+            #Atualizando estados
+            self.hidro_alt['finalizado'] = 1
+
+        #___________________________________VIA DESLOCAMENTO________________________________________
+        
+        if self.via_deslocamento['autorizado'] == 1:
+            escalados_via = []
+            for i in range(len(self.funcionarios)):
+                if self.subfases['via_deslocamento'] in self.funcionarios[i]['habilidades']:
+                    escalados_via.append(self.funcionarios[i]['nome'])
+            qtd_escalados = np.random.choice(escalados_via, size=np.random.randint(1, len(escalados_via)), replace=False)
+            print('\nvia_deslocamento', escalados_via, '\nescalados', qtd_escalados)
+            mu, sigma = self.via_deslocamento['media_horas'], self.via_deslocamento['std_horas']
+            tempo_via = self.via_deslocamento['tipo']*abs(np.random.normal(mu, sigma, 1))/len(qtd_escalados)    
+            
+            #Atualizando tempos
+            self.tempo_total['via_deslocamento'] = tempo_via[0]
+
+            #Atualizando estados
+            self.via_deslocamento['finalizado'] = 1
+                
+        #___________________________________AREA EDIFICADA________________________________________
+        if self.area_edificada['autorizado'] == 1:
+            escalados_area_edificada = []
+            for i in range(len(self.funcionarios)):
+                if self.subfases['area_edificada'] in self.funcionarios[i]['habilidades']:
+                    escalados_area_edificada.append(self.funcionarios[i]['nome'])
+            qtd_escalados = np.random.choice(escalados_area_edificada, size=np.random.randint(1, len(escalados_area_edificada)), replace=False)
+            print('\nvarea edificada', escalados_area_edificada, '\nescalados', qtd_escalados)
+            mu, sigma = self.area_edificada['media_horas'], self.area_edificada['std_horas']
+            tempo_area_edificada = self.area_edificada['tipo']*abs(np.random.normal(mu, sigma, 1))/len(qtd_escalados)    
+            
+            #Atualizando tempos
+            self.tempo_total['area_edificada'] = tempo_area_edificada[0]
+
+            #Atualizando estados
+            self.area_edificada['finalizado'] = 1
+        
+    
+    def check_env(self):
         if self.ferrovia['finalizado'] == 1:
             self.via_deslocamento['autorizado'] = 1
-        
+            
         elif self.hidro_alt['finalizado'] == 1:
             self.toponimos['autorizado'] = 1
 
