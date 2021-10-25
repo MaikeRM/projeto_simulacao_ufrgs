@@ -26,6 +26,33 @@ class Enviroment(object):
         self.reward = 0.0
         self.train = 1
         self.terminou = 0
+        self.subfases = {'ferrovia':0,
+                         'hidrografia':1,
+                         'via_deslocamento':2,
+                         'elementos_varios':3,
+                         'limites_especiais':4,
+                         'toponimos':5,
+                         'area_edificada':6,
+                         'planimetria':7,
+                         'vegetacao':8,
+                         'cq_tematica':9,
+                         'validacao':10,
+                         'edicao':11}
+
+        self.funcionarios = {'Danilo': [1,3,4,5,6,7,9],
+                             'Paulo': [1,3,4,5,6,7,9],
+                             'Andre': [2,8,9],
+                             'Castro': [0,3,4,5,6,7,9,10],
+                             'Gustavo Ramos': [1,2,8,9,10],
+                             'Henrique Pires': [2,8],
+                             'Viana':[1,2,8],
+                             'Mendonca': [2,8],
+                             'Rute Daniela': [1,2,8],
+                             'Cialla': [1,2,8],
+                             'Colleto': [1,2],
+                             'Fachi': [10,11],
+                             'Ana Luiza': [10,11]}
+
     
     def update_enviroment(self, tempo_ai):
 
@@ -60,3 +87,4 @@ class Enviroment(object):
         
         elif self.validacao['finalizado'] == 1:
             self.edicao['autorizado'] == 1
+
