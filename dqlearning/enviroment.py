@@ -142,8 +142,62 @@ class Enviroment(object):
 
             #Atualizando estados
             self.area_edificada['finalizado'] = 1
-        
+
+        #___________________________________ELEMENTOS VARIOS________________________________________
+        if self.elementos_varios['autorizado'] == 1:
+            escalados_elementos = []
+            for i in range(len(self.funcionarios)):
+                if self.subfases['elementos_varios'] in self.funcionarios[i]['habilidades']:
+                    escalados_elementos.append(self.funcionarios[i]['nome'])
+            qtd_escalados = np.random.choice(escalados_elementos, size=np.random.randint(1, len(escalados_area_edificada)), replace=False)
+            print('\nElementos varios', escalados_elementos, '\nescalados', qtd_escalados)
+            mu, sigma = self.elementos_varios['media_horas'], self.elementos_varios['std_horas']
+            tempo_elementos = self.elementos_varios['tipo']*abs(np.random.normal(mu, sigma, 1))/len(qtd_escalados)    
+            
+            #Atualizando tempos
+            self.tempo_total['elementos_varios'] = tempo_elementos[0]
+
+            #Atualizando estados
+            self.elementos_varios['finalizado'] = 1
     
+        #___________________________________LIMITES ESPECIAS________________________________________
+        if self.limites_especiais['autorizado'] == 1:
+            escalados_limites = []
+            for i in range(len(self.funcionarios)):
+                if self.subfases['limites_especiais'] in self.funcionarios[i]['habilidades']:
+                    escalados_limites.append(self.funcionarios[i]['nome'])
+            qtd_escalados = np.random.choice(escalados_limites, size=np.random.randint(1, len(escalados_area_edificada)), replace=False)
+            print('\nLimites especiais', escalados_limites, '\nescalados', qtd_escalados)
+            mu, sigma = self.escalados_limites['media_horas'], self.escalados_limites['std_horas']
+            tempo_limites = self.limites_especiais['tipo']*abs(np.random.normal(mu, sigma, 1))/len(qtd_escalados)    
+            
+            #Atualizando tempos
+            self.tempo_total['limites_especiais'] = tempo_limites[0]
+
+            #Atualizando estados
+            self.limites_especiais['finalizado'] = 1
+
+        #___________________________________TOPONIMOS________________________________________
+        if self.toponimos['autorizado'] == 1:
+            escalados_toponimos = []
+            for i in range(len(self.funcionarios)):
+                if self.subfases['toponimos'] in self.funcionarios[i]['habilidades']:
+                    escalados_limites.append(self.funcionarios[i]['nome'])
+            qtd_escalados = np.random.choice(escalados_toponimos, size=np.random.randint(1, len(escalados_area_edificada)), replace=False)
+            print('\nToponimos', escalados_toponimos, '\nescalados', qtd_escalados)
+            mu, sigma = self.toponimos['media_horas'], self.toponimos['std_horas']
+            tempo_toponimos = self.toponimos['tipo']*abs(np.random.normal(mu, sigma, 1))/len(qtd_escalados)    
+            
+            #Atualizando tempos
+            self.tempo_total['toponimos'] = tempo_toponimos[0]
+
+            #Atualizando estados
+            self.toponimos['finalizado'] = 1
+
+
+
+
+
     def check_env(self):
         if self.ferrovia['finalizado'] == 1:
             self.via_deslocamento['autorizado'] = 1
