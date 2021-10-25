@@ -22,10 +22,22 @@ class Enviroment(object):
         self.validacao = {'media_horas':9,'std_horas': 3, 'tipo': self.tipo_2, 'autorizado': 0, 'finalizado':0}
         self.edicao = {'media_horas':18,'std_horas': 3, 'tipo': self.tipo_2, 'autorizado': 0, 'finalizado':0}
         self.tarefas_iniciais = self.ferrovia, self.hidro_alt
-        self.tempo_total = 0.0
         self.reward = 0.0
         self.train = 1
         self.terminou = 0
+        self.tempo_total = {'ferrovia': 0,
+                         'hidrografia': 0,
+                         'via_deslocamento': 0,
+                         'elementos_varios': 0,
+                         'limites_especiais': 0,
+                         'toponimos': 0,
+                         'area_edificada': 0,
+                         'planimetria': 0,
+                         'vegetacao': 0,
+                         'cq_tematica': 0,
+                         'validacao': 0,
+                         'edicao': 0}
+
         self.subfases = {'ferrovia':0,
                          'hidrografia':1,
                          'via_deslocamento':2,
@@ -62,12 +74,25 @@ class Enviroment(object):
         self.reward = 1e-3*self.reward
 
         #Iniciando o processo
+
+        #___________________________________FERROVIA________________________________________
         if self.ferrovia['autorizado'] == 1:
             escalados_ferrovia = []
             for i in range(len(self.funcionarios)):
                 if self.subfases['ferrovia'] in self.funcionarios[i]['habilidades']:
                     escalados_ferrovia.append(self.funcionarios[i]['numero'])
+            qtd_escalados = np.random.choice(escalados_ferrovia, size=np.random.randint(1, len(escalados_ferrovia)), replace=False)
+            mu, sigma = self.ferrovia['media_horas'], self.ferrovia['std_horas']
+            tempo_ferrovia = abs(np.random.normal(mu, sigma, qtd_escalados))*self.ferrovia['tipo']
 
+            #Atualizando tempos
+            self.tempo_total['ferrovia'] = tempo_ferrovia
+
+            #Atualizando estados
+            self.ferrovia['finalizado'] = 1
+            self.via_deslocamento['autorizado'] = 1
+
+        #___________________________________HIDROGRAFIA________________________________________
         if self.hidro_alt['autorizado'] == 1:
             escalados_hidrovia = []
             for i in range(len(self.funcionarios)):
