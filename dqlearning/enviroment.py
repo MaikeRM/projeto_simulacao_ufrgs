@@ -35,13 +35,14 @@ class Enviroment(object):
         #Escalonamento de recompensa
         self.reward = 1e-3*self.reward
 
-        #Obtenção do próximo estado
+        #Nó 1___________________________________________
         if self.ferrovia['finalizado'] == 1:
             self.via_deslocamento['autorizado'] = 1
         
         elif self.hidro_alt['finalizado'] == 1:
             self.toponimos['autorizado'] = 1
 
+        #Nó 2___________________________________________
         elif self.via_deslocamento['finalizado'] == 1 and self.hidro_alt['finalizado'] == 1:
             self.area_edificada['autorizado'] = 1
             self.elementos_varios['autorizado'] = 1
@@ -54,7 +55,8 @@ class Enviroment(object):
         elif (self.elementos_varios['finalizado']==1 and self.limites_especiais['finalizado'] == 1 and 
             self.toponimos['finalizado']==1 and self.planimetria['finalizado']==1 and self.vegetacao['finalizado']):
             self.cq_tematico['autorizado'] = 1
-
+            
+        #Nó 3___________________________________________
         elif self.cq_tematico['finalizado'] == 1:
             self.validacao['autorizado'] == 1
         
